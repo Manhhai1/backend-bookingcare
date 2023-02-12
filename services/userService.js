@@ -2,25 +2,33 @@ import db from '../models/index'
 let getAllCodeFromUserService = (typeInput) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let allUsers = {}
+            let typeCode = {}
             if (!typeInput) {
                 resolve({
                     message: 'type is not correct'
                 })
             }
-            else{
-                allUsers.data = await db.Allcode.findAll({
-                    where:{
-                        type: typeInput
-                    }
-                })
+            else {
+                if (typeInput === 'all') {
+                    typeCode = await db.Allcode.findAll()
+                }
+                else {
+                    typeCode = await db.Allcode.findAll({
+                        where: {
+                            type: typeInput
+                        }
+                    })
+                }
             }
-            resolve(allUsers.data)
+            resolve({
+                errCode:'get data success',
+                typeCode: typeCode
+            })
         } catch (error) {
             reject(error)
         }
     })
 }
-module.exports ={
+module.exports = {
     getAllCodeFromUserService: getAllCodeFromUserService
 }

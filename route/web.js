@@ -3,7 +3,10 @@ import homeController from "../controllers/homeController"
 import bp from 'body-parser'
 import userController from '../controllers/userController'
 import doctorController from '../controllers/doctorController'
+import patientController from '../controllers/patientController'
+import specialtyController from '../controllers/specialtyController'
 import { use } from "express/lib/router";
+import { route } from "express/lib/application"
 let router = express.Router()
 let initWebRouter = (app) => {
     router.get('/', homeController.getHomePage)
@@ -26,6 +29,22 @@ let initWebRouter = (app) => {
     router.get('/api/get-all-doctors', doctorController.getAlldoctors)
     router.post('/api/post-information-doctor', doctorController.postInformationDoctor)
     router.get('/api/information-doctor', doctorController.getInformationDoctorById)
+    router.post('/api/post-schedule-doctor', doctorController.postScheduleDoctor)
+    router.get('/api/get-schedule-doctor', doctorController.getScheduleDoctor)
+    router.post('/api/post-infor-doctor', doctorController.postDoctorInfor)
+    router.get('/api/doctor-infor', doctorController.getDoctorInfor)
+    router.post('/api/booking-from-patient', patientController.postBookingFromPatient)
+    router.post(`/api/accept-booking-from-patient`, patientController.postAcceptBookingFromPatient)
+
+
+
+    ///Specialty
+    router.get(`/specialty`, specialtyController.getAllSpecialties)
+    router.get('/specialty-by-id', specialtyController.getSpecialtyById)
+    router.get('/specialty-all-doctors', specialtyController.getAllDoctorsFromSpecialty)
+    router.post(`/post-infor-specialty`, specialtyController.postInforSpecialty)
+    router.put('/update-infor-specialty', specialtyController.updateInforSpecialty)
+    router.delete('/delete-specialty', specialtyController.deleteSpecialty)
     return app.use('/', router)
 }
 

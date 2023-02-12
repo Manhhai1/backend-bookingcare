@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Markdown.belongsTo(models.User, {foreignKey:'doctorId'})
+      Markdown.belongsTo(models.User, { foreignKey: 'doctorId' })
+      Markdown.hasOne(models.Doctor_infor, { foreignKey: 'doctorId', targetKey:'doctorId', as:'markdownData'})
     }
   }
   Markdown.init({

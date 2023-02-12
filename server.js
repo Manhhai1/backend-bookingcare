@@ -8,12 +8,15 @@ import cors from 'cors'
 
 dotenv.config()
 let app = express()
+
 const corsOptions = {
     origin: process.env.REACT_APP_FRONTEND_URL || 'http://localhost:3000',
     credentials: true,
     optionSuccessStatus: 200
 }
 app.use(cors(corsOptions));
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
 initWebRouter(app)
 connectDB()
 let port = process.env.PORT || 6060

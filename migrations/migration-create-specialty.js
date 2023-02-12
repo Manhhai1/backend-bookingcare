@@ -10,7 +10,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       description: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT('long')
+      },
+      descriptionMarkdown: {
+        type: Sequelize.TEXT('long')
       },
       image: {
         type: Sequelize.STRING

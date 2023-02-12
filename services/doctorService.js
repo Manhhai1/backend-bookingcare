@@ -1,4 +1,7 @@
+import { where } from 'sequelize'
+import doctor_infor from '../models/doctor_infor'
 import db from '../models/index'
+import { v4 as uuidv4 } from 'uuid';
 let getTopDoctorHome = (limitInput) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -47,16 +50,34 @@ let getAlldoctors = () => {
 let postInformationDoctor = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            await db.Markdown.create({
-                contentMarkdown: data.contentMarkdown,
-                contentHTML: data.contentHTML,
-                description: data.description,
-                doctorId: data.doctorId
+            let doctor = await db.Markdown.findOne({
+                where: {
+                    doctorId: data.doctorId
+                }
             })
-            resolve({
-                errCode: 0,
-                message: 'save the information success'
-            })
+            if (!doctor) {
+                await db.Markdown.create({
+                    contentMarkdown: data.contentMarkdown,
+                    contentHTML: data.contentHTML,
+                    description: data.description,
+                    doctorId: data.doctorId
+                })
+                resolve({
+                    errCode: 0,
+                    message: "create data success"
+                })
+            }
+            else {
+                doctor.contentMarkdown = data.contentMarkdown
+                doctor.contentHTML = data.contentHTML
+                doctor.description = data.description
+                doctor.doctorId = data.doctorId
+                await doctor.save()
+                resolve({
+                    errCode: 0,
+                    message: 'update data success'
+                })
+            }
 
         } catch (error) {
             reject(error)
@@ -69,17 +90,18 @@ let getInformationDoctorById = (id) => {
         try {
             let data = await db.User.findOne({
                 where: { id: id },
-                attributes:{
-                    exclude: ['password', 'image']
+                attributes: {
+                    exclude: ['password']
                 },
                 include: [
                     { model: db.Markdown, attributes: ['contentHTML', 'contentMarkdown', 'description'] },
-                ], 
-                raw: true,
-                nest:true
+                    { model: db.Allcode, as: 'positionData', attributes: ['valueEn', 'valueVi'] },
+                    { model: db.Allcode, as: 'genderData', attributes: ['valueEn', 'valueVi'] },
+                    { model: db.Doctor_infor, as: 'doctorData' }
+                ],
             })
             resolve({
-                errCode:'0',
+                errCode: '0',
                 message: 'get Information Doctor success',
                 data: data
             })
@@ -88,9 +110,156 @@ let getInformationDoctorById = (id) => {
         }
     })
 }
+let getDoctorInfor = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await db.Doctor_infor.findOne({
+                where: { doctorId: id },
+                include: [
+                    { model: db.Allcode, as: 'priceData', attributes: ['valueEn', 'valueVi'] },
+                    { model: db.Allcode, as: 'paymentData', attributes: ['valueEn', 'valueVi'] },
+                    { model: db.Allcode, as: 'provinceData', attributes: ['valueEn', 'valueVi'] },
+
+                ], raw: false,
+                nest: true
+            })
+            resolve({
+                errCode: '0',
+                message: 'get Information Doctor success',
+                data
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+let deleteArr = (array1, array2) => {
+    for (var i = 0; i < array2.length; i++) {
+        var arrlen = array1.length;
+        for (var j = 0; j < arrlen; j++) {
+            if (array2[i] == array1[j]) {
+                array1 = array1.slice(0, j).concat(array1.slice(j + 1, arrlen));
+            }
+        }
+    }
+    return array1
+}
+let checkValue = async (dataInput) => {
+    let dataFromDB = await db.Schedule.findAll({
+        where: { doctorId: dataInput[0].doctorId },
+        raw: true
+    })
+    let data = dataInput
+    let arr = []
+    await data.forEach(async (item, index) => {
+        await dataFromDB.forEach(element => {
+
+            if (item.date.toString() === element.date &&
+                item.month.toString() === element.month &&
+                item.year.toString() === element.year &&
+                item.keyMap.toString() === element.keyMap) {
+                arr.push(item)
+
+            }
+        });
+    })
+    data = deleteArr(data, arr)
+    console.log(data)
+    return data
+}
+let postScheduleDoctor = (dataInput) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await checkValue(dataInput)
+            db.Schedule.bulkCreate(
+                data.map((item, index) => {
+                    return item
+                })
+            )
+            resolve({
+                errCode: 0,
+                message: 'post data success'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+let getScheduleDoctor = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await db.Schedule.findAll({
+                where: {
+                    doctorId: id
+                },
+                include: [
+                    { model: db.Allcode, attributes: ['type', 'valueEn', 'valueVi'] }
+                ],
+                nest: true
+            })
+            resolve({
+                errCode: 0,
+                message: "get data success",
+                data: data
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+let postDoctorInfor = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let doctor = await db.Doctor_infor.findOne({
+                where: {
+                    doctorId: data.doctorId
+                }
+            })
+            if (!doctor) {
+                await db.Doctor_infor.create({
+                    doctorId: data.doctorId,
+                    priceId: data.priceId,
+                    provinceId: data.provinceId,
+                    paymentId: data.paymentId,
+                    addressClinic: data.addressClinic,
+                    nameClinic: data.nameClinic,
+                    note: data.note,
+                    count: data.count
+                })
+                resolve({
+                    errCode: 0,
+                    message: 'create data success'
+                })
+            }
+            else {
+                doctor.doctorId = data.doctorId
+                doctor.priceId = data.priceId
+                doctor.paymentId = data.paymentId
+                doctor.raddressClinic = data.addressClinic
+                doctor.provinceId = data.provinceId
+                doctor.nameClinic = data.nameClinic
+                doctor.note = data.note
+                doctor.count = data.count
+                await doctor.save()
+                resolve({
+                    errCode: 0,
+                    message: 'update data success'
+                })
+            }
+
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
 module.exports = {
     getTopDoctorHome: getTopDoctorHome,
     getAlldoctors: getAlldoctors,
     postInformationDoctor: postInformationDoctor,
-    getInformationDoctorById: getInformationDoctorById
+    getInformationDoctorById: getInformationDoctorById,
+    postScheduleDoctor: postScheduleDoctor,
+    getScheduleDoctor: getScheduleDoctor,
+    postDoctorInfor: postDoctorInfor,
+    getDoctorInfor: getDoctorInfor,
 }

@@ -48,7 +48,51 @@ let getInformationDoctorById = async (req, res) => {
     } catch (error) {
         return res.status(200).json({
             errCode: -1,
-            message:'get data error from server'
+            message: 'get data error from server'
+        })
+    }
+}
+let postScheduleDoctor = async (req, res) => {
+    try {
+        let response = await doctorService.postScheduleDoctor(req.body)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(200).json({
+            errCode: -1,
+            message: 'get data error from server'
+        })
+    }
+}
+let getScheduleDoctor = async (req, res) => {
+    try {
+        let response = await doctorService.getScheduleDoctor(req.query.id)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(200).json({
+            errCode: -1,
+            message: 'get data error from server'
+        })
+    }
+}
+let postDoctorInfor = async (req, res) => {
+    try {
+        let response = await doctorService.postDoctorInfor(req.body)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(200).json({
+            errCode: -1,
+            message: 'get data error from server'
+        })
+    }
+}
+let getDoctorInfor = async (req, res) => {
+    try {
+        let response = await doctorService.getDoctorInfor(req.query.id)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(200).json({
+            errCode: -1,
+            message: 'get data error from server'
         })
     }
 }
@@ -56,5 +100,9 @@ module.exports = {
     getTopDoctorHome: getTopDoctorHome,
     getAlldoctors: getAlldoctors,
     postInformationDoctor: postInformationDoctor,
-    getInformationDoctorById: getInformationDoctorById
+    getInformationDoctorById: getInformationDoctorById,
+    postScheduleDoctor: postScheduleDoctor,
+    getScheduleDoctor: getScheduleDoctor,
+    postDoctorInfor: postDoctorInfor,
+    getDoctorInfor: getDoctorInfor
 }
