@@ -5,6 +5,7 @@ import userController from '../controllers/userController'
 import doctorController from '../controllers/doctorController'
 import patientController from '../controllers/patientController'
 import specialtyController from '../controllers/specialtyController'
+import telemedicineController from '../controllers/telemedicineController'
 import { use } from "express/lib/router";
 import { route } from "express/lib/application"
 let router = express.Router()
@@ -45,6 +46,14 @@ let initWebRouter = (app) => {
     router.post(`/post-infor-specialty`, specialtyController.postInforSpecialty)
     router.put('/update-infor-specialty', specialtyController.updateInforSpecialty)
     router.delete('/delete-specialty', specialtyController.deleteSpecialty)
+
+
+    //telemidicine
+    router.get(`/telemedicines`, telemedicineController.getAllTelemedicines)
+    router.delete('/delete-telemedicine', telemedicineController.deleteTelemedicine)
+    router.post('/post-infor-telemedicine', telemedicineController.postInforTelemedicine)
+    router.get('/telemedicine-by-id', telemedicineController.getTelemedicineById)
+    router.put('/update-infor-telemedicine', telemedicineController.updateInforTelemedicine)
     return app.use('/', router)
 }
 
