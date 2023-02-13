@@ -2,7 +2,7 @@ import { status } from 'express/lib/response';
 import doctorService from '../services/doctorService'
 let getTopDoctorHome = async (req, res) => {
     let limit = req.query.limit;
-    if (!limit) limit = 50;
+    if (!limit) limit = 10;
     try {
         let response = await doctorService.getTopDoctorHome(+limit)
         return res.status(200).json(response)
@@ -63,6 +63,17 @@ let postScheduleDoctor = async (req, res) => {
         })
     }
 }
+let postScheduleTeleDoctor = async (req, res) => {
+    try {
+        let response = await doctorService.postScheduleTeleDoctor(req.body)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(200).json({
+            errCode: -1,
+            message: 'get data error from server'
+        })
+    }
+}
 let getScheduleDoctor = async (req, res) => {
     try {
         let response = await doctorService.getScheduleDoctor(req.query.id)
@@ -104,5 +115,6 @@ module.exports = {
     postScheduleDoctor: postScheduleDoctor,
     getScheduleDoctor: getScheduleDoctor,
     postDoctorInfor: postDoctorInfor,
-    getDoctorInfor: getDoctorInfor
+    getDoctorInfor: getDoctorInfor,
+    postScheduleTeleDoctor: postScheduleTeleDoctor
 }

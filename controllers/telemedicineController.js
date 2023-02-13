@@ -54,10 +54,22 @@ let updateInforTelemedicine = async (req, res) => {
         })
     }
 }
+let getAllDoctorsFromTelemedicine = async (req, res) => {
+    try {
+        let allDoctors = await telemedicineSevice.getAllDoctorsFromTelemedicine(req.query.id)
+        res.status(200).json(allDoctors)
+    } catch (error) {
+        res.status(200).json({
+            message: 'error from sever',
+            errCode: -1
+        })
+    }
+}
 module.exports = {
     getAllTelemedicines: getAllTelemedicines,
     deleteTelemedicine: deleteTelemedicine,
     postInforTelemedicine: postInforTelemedicine,
     getTelemedicineById: getTelemedicineById,
-    updateInforTelemedicine: updateInforTelemedicine
+    updateInforTelemedicine: updateInforTelemedicine,
+    getAllDoctorsFromTelemedicine: getAllDoctorsFromTelemedicine
 }

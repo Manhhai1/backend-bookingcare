@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       Doctor_infor.belongsTo(models.User, { foreignKey: 'doctorId', targetKey: 'id', as: 'doctorData' })
       Doctor_infor.belongsTo(models.Allcode, { foreignKey: 'priceId', targetKey: 'keyMap', as: 'priceData' })
       Doctor_infor.belongsTo(models.Schedule, { foreignKey: 'doctorId', targetKey: 'doctorId', as: 'scheduleDoctor' })
+      Doctor_infor.belongsTo(models.Schedule_teledoctor, { foreignKey: 'doctorId', targetKey: 'doctorId', as: 'scheduleTeledoctor' })
       Doctor_infor.belongsTo(models.Markdown, { foreignKey: 'doctorId', targetKey: 'doctorId', as: 'markdownData' })
       Doctor_infor.belongsTo(models.Allcode, { foreignKey: 'provinceId', targetKey: 'keyMap', as: 'provinceData' })
       Doctor_infor.belongsTo(models.Allcode, { foreignKey: 'paymentId', targetKey: 'keyMap', as: 'paymentData' })
@@ -27,7 +28,9 @@ module.exports = (sequelize, DataTypes) => {
     addressClinic: DataTypes.STRING,
     nameClinic: DataTypes.STRING,
     note: DataTypes.STRING,
-    count: DataTypes.STRING
+    count: DataTypes.STRING,
+    specialtyId: DataTypes.STRING,
+    telemedicineId: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Doctor_infor',

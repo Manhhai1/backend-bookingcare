@@ -96,11 +96,64 @@ let updateInforTelemedicine = (data) => {
         }
     })
 }
+let getAllDoctorsFromTelemedicine = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let allDoctors = await db.Doctor_infor.findAll({
+                where: {
+                    telemedicineId: id
+                },
+                include: [
+                    {
+                        model: db.User, as: 'doctorData', attributes: ['firstName', 'lastName', 'id', 'image'],
+                        include: [
+                            { model: db.Allcode, as: 'positionData', attributes: ['valueEn', 'valueVi'] },
+
+                        ]
+                    },
+                    {
+                        model: db.Markdown, as: 'markdownData', attributes: ['description', 'contentHTML', 'contentMarkdown']
+                    },
+                    {
+                        model: db.Allcode, as: 'priceData', attributes: ['valueEn', 'valueVi']
+                    },
+                    {
+                        model: db.Allcode, as: 'provinceData', attributes: ['valueEn', 'valueVi']
+                    }
+                ]
+            })
+            let allScheduleOfDoctor = await db.Doctor_infor.findAll({
+                where: {
+                    telemedicineId: id
+                },
+                attributes: ['doctorId'],
+                include: [
+                    {
+                        model: db.Schedule_teledoctor, as: 'scheduleTeledoctor',
+                        include: [
+                            { model: db.Allcode, attributes: ['type', 'valueEn', 'valueVi'] }
+                        ]
+                    }
+
+                ]
+            })
+            resolve({
+                errCode: 0,
+                message: "get all Doctors from Specialty success",
+                allDoctors,
+                allScheduleOfDoctor
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 module.exports = {
     getAllTelemedicines: getAllTelemedicines,
     deleteTelemedicine: deleteTelemedicine,
     postInforTelemedicine: postInforTelemedicine,
     getTelemedicineById: getTelemedicineById,
-    updateInforTelemedicine: updateInforTelemedicine
+    updateInforTelemedicine: updateInforTelemedicine,
+    getAllDoctorsFromTelemedicine: getAllDoctorsFromTelemedicine
 
 }

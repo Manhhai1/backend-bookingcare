@@ -8,7 +8,7 @@ let getTopDoctorHome = (limitInput) => {
             let data = await db.User.findAll({
                 limit: limitInput,
                 where: {
-                    roleId: 'R2'
+                    roleId: 'R2',
                 },
                 order: [['createdAt', 'DESC']],
 
@@ -35,7 +35,7 @@ let getAlldoctors = () => {
                 where: {
                     roleId: 'R2'
                 },
-                attributes: { exclude: ['password', 'image'] }
+                attributes: { exclude: ['password'] }
             })
             resolve({
                 errCode: 0,
@@ -185,6 +185,24 @@ let postScheduleDoctor = (dataInput) => {
         }
     })
 }
+let postScheduleTeleDoctor = (dataInput) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await checkValue(dataInput)
+            db.Schedule_teledoctor.bulkCreate(
+                data.map((item, index) => {
+                    return item
+                })
+            )
+            resolve({
+                errCode: 0,
+                message: 'post data success'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 let getScheduleDoctor = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -224,7 +242,8 @@ let postDoctorInfor = (data) => {
                     addressClinic: data.addressClinic,
                     nameClinic: data.nameClinic,
                     note: data.note,
-                    count: data.count
+                    count: data.count,
+                    specialtyId: data.specialtyId
                 })
                 resolve({
                     errCode: 0,
@@ -240,6 +259,7 @@ let postDoctorInfor = (data) => {
                 doctor.nameClinic = data.nameClinic
                 doctor.note = data.note
                 doctor.count = data.count
+                doctor.specialtyId = data.specialtyId
                 await doctor.save()
                 resolve({
                     errCode: 0,
@@ -262,4 +282,5 @@ module.exports = {
     getScheduleDoctor: getScheduleDoctor,
     postDoctorInfor: postDoctorInfor,
     getDoctorInfor: getDoctorInfor,
+    postScheduleTeleDoctor: postScheduleTeleDoctor
 }

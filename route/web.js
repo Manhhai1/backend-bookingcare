@@ -25,12 +25,14 @@ let initWebRouter = (app) => {
     router.delete('/api/delete-user', userController.deleteUserFromController)
     router.put('/api/edit-user', userController.editUser)
 
+    //doctor
     router.get('/api/getAllcodes', userController.getAllCodes)
     router.get('/api/top-doctor-home', doctorController.getTopDoctorHome)
     router.get('/api/get-all-doctors', doctorController.getAlldoctors)
     router.post('/api/post-information-doctor', doctorController.postInformationDoctor)
     router.get('/api/information-doctor', doctorController.getInformationDoctorById)
     router.post('/api/post-schedule-doctor', doctorController.postScheduleDoctor)
+    router.post('/api/post-schedule-teledoctor', doctorController.postScheduleTeleDoctor)
     router.get('/api/get-schedule-doctor', doctorController.getScheduleDoctor)
     router.post('/api/post-infor-doctor', doctorController.postDoctorInfor)
     router.get('/api/doctor-infor', doctorController.getDoctorInfor)
@@ -45,6 +47,7 @@ let initWebRouter = (app) => {
     router.get('/specialty-all-doctors', specialtyController.getAllDoctorsFromSpecialty)
     router.post(`/post-infor-specialty`, specialtyController.postInforSpecialty)
     router.put('/update-infor-specialty', specialtyController.updateInforSpecialty)
+
     router.delete('/delete-specialty', specialtyController.deleteSpecialty)
 
 
@@ -54,6 +57,7 @@ let initWebRouter = (app) => {
     router.post('/post-infor-telemedicine', telemedicineController.postInforTelemedicine)
     router.get('/telemedicine-by-id', telemedicineController.getTelemedicineById)
     router.put('/update-infor-telemedicine', telemedicineController.updateInforTelemedicine)
+    router.get('/telemedicine-all-doctors', telemedicineController.getAllDoctorsFromTelemedicine)
     return app.use('/', router)
 }
 
