@@ -92,10 +92,22 @@ let postDoctorInfor = async (req, res) => {
     } catch (error) {
         return res.status(200).json({
             errCode: -1,
-            message: 'get data error from server'
+            message: ' error from server'
         })
     }
 }
+let updateDoctorInfor = async (req, res) => {
+    try {
+        let response = await doctorService.updateInforDoctor(req.body)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(200).json({
+            errCode: -1,
+            message: ' error from server'
+        })
+    }
+}
+
 let getDoctorInfor = async (req, res) => {
     try {
         let response = await doctorService.getDoctorInfor(req.query.id)
@@ -104,6 +116,50 @@ let getDoctorInfor = async (req, res) => {
         return res.status(200).json({
             errCode: -1,
             message: 'get data error from server'
+        })
+    }
+}
+let getScheduleDoctorJoinPatient = async (req, res) => {
+    try {
+        let response = await doctorService.getScheduleDoctorJoinPatient(req.query.id)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(200).json({
+            errCode: -1,
+            message: 'get data error from server'
+        })
+    }
+}
+let deleteBooking = async (req, res) => {
+    try {
+        let response = await doctorService.deleteBooking(req.query.id)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(200).json({
+            errCode: -1,
+            message: 'get data error from server'
+        })
+    }
+}
+let postHistory = async (req, res) => {
+    try {
+        let response = await doctorService.postHistory(req.body)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(200).json({
+            errCode: -1,
+            message: 'post data error from server'
+        })
+    }
+}
+let getAllHistories = async (req, res) => {
+    try {
+        let response = await doctorService.getAllHistories()
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(200).json({
+            errCode: -1,
+            message: 'post data error from server'
         })
     }
 }
@@ -116,5 +172,10 @@ module.exports = {
     getScheduleDoctor: getScheduleDoctor,
     postDoctorInfor: postDoctorInfor,
     getDoctorInfor: getDoctorInfor,
-    postScheduleTeleDoctor: postScheduleTeleDoctor
+    postScheduleTeleDoctor: postScheduleTeleDoctor,
+    getScheduleDoctorJoinPatient: getScheduleDoctorJoinPatient,
+    deleteBooking: deleteBooking,
+    postHistory: postHistory,
+    updateDoctorInfor: updateDoctorInfor,
+    getAllHistories: getAllHistories
 }

@@ -85,6 +85,42 @@ let postInformationDoctor = (data) => {
     })
 
 }
+let updateInforDoctor = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let doctor = await db.Doctor_infor.findOne({
+                where: { doctorId: data.id }
+            })
+            if (doctor) {
+                doctor.priceId = data.priceId
+                doctor.paymentId = data.paymentId
+                doctor.raddressClinic = data.addressClinic
+                doctor.provinceId = data.provinceId
+                doctor.nameClinic = data.nameClinic
+                doctor.note = data.note
+                doctor.count = data.count
+                doctor.specialtyId = data.specialtyId
+                await doctor.save()
+            }
+            let doctorMarkdown = await db.Doctor_infor.findOne({
+                where: { doctorId: data.id }
+            })
+            if (doctorMarkdown) {
+                doctorMarkdown.contentMarkdown = data.contentMarkdown
+                doctorMarkdown.contentHTML = data.contentHTML
+                doctorMarkdown.description = data.description
+                doctorMarkdown.doctorId = data.doctorId
+                await doctor.save()
+            }
+            resolve({
+                errCode: 0,
+                message: 'update data success'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 let getInformationDoctorById = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -145,14 +181,14 @@ let deleteArr = (array1, array2) => {
     return array1
 }
 let checkValue = async (dataInput) => {
-    let dataFromDB = await db.Schedule.findAll({
+    let dataFromDB = await db.Schedule_teledoctor.findAll({
         where: { doctorId: dataInput[0].doctorId },
         raw: true
     })
     let data = dataInput
     let arr = []
-    await data.forEach(async (item, index) => {
-        await dataFromDB.forEach(element => {
+    data.forEach((item, index) => {
+        dataFromDB.forEach(element => {
 
             if (item.date.toString() === element.date &&
                 item.month.toString() === element.month &&
@@ -273,6 +309,80 @@ let postDoctorInfor = (data) => {
     })
 }
 
+let getScheduleDoctorJoinPatient = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await db.Schedule.findAll({
+                where: {
+                    doctorId: id
+                },
+                include: [
+                    { model: db.Allcode, attributes: ['type', 'valueEn', 'valueVi'] },
+                    { model: db.Booking, as: 'scheduleData', attributes: ['namePatient', 'email', 'phoneNumber', 'acceptBooking', 'status', 'id', 'patientId'] }
+                ],
+                nest: true
+            })
+            resolve({
+                errCode: 0,
+                message: "get data success",
+                data: data
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+}
+let deleteBooking = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let booking = await db.Booking.findOne({ where: { id: id } });
+            if (booking) {
+                await booking.destroy()
+            }
+            resolve({
+                errCode: 0,
+                message: "delete booking by id success",
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+let postHistory = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await db.History.create({
+                patientId: data.patientId,
+                doctorId: data.doctorId,
+                date: data.date,
+                description: data.description
+            })
+            resolve({
+                errCode: 0,
+                message: 'post data to history success'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+}
+let getAllHistories = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let histories = await db.History.findAll()
+            resolve({
+                errCode: 0,
+                message: 'get data to history success',
+                histories
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+}
 module.exports = {
     getTopDoctorHome: getTopDoctorHome,
     getAlldoctors: getAlldoctors,
@@ -282,5 +392,10 @@ module.exports = {
     getScheduleDoctor: getScheduleDoctor,
     postDoctorInfor: postDoctorInfor,
     getDoctorInfor: getDoctorInfor,
-    postScheduleTeleDoctor: postScheduleTeleDoctor
+    postScheduleTeleDoctor: postScheduleTeleDoctor,
+    getScheduleDoctorJoinPatient: getScheduleDoctorJoinPatient,
+    deleteBooking: deleteBooking,
+    postHistory: postHistory,
+    updateInforDoctor: updateInforDoctor,
+    getAllHistories: getAllHistories
 }

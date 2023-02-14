@@ -2,6 +2,7 @@ import { where } from 'sequelize'
 import db from '../models/index'
 import emailSevice from './emailSevice'
 import { v4 as uuidv4 } from 'uuid';
+import schedule from '../models/schedule';
 let postBookingFromPatient = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -48,23 +49,22 @@ let postBookingFromPatient = (data) => {
                     },
                     include: [
                         { model: db.Allcode, attributes: ['valueEn', 'valueVi'] },
-                        { model: db.User, attributes: ['firstName', 'lastName'] }
+                        { model: db.User, as: 'nameDoctor', attributes: ['firstName', 'lastName'] }
                     ],
-                    raw: false
                 }
                 )
+                // console.log(schedule)
                 await emailSevice.sentEmail({
                     receiverEmail: 'vomanhhai230720@gmail.com',
                     date: schedule.date,
-                    month: schedule.month,
+                    month: +schedule.month+1,
                     year: schedule.year,
                     time: schedule.Allcode.valueVi,
-                    lastNameDoctor: schedule.User.lastName,
-                    firstNameDoctor: schedule.User.firstName,
+                    lastNameDoctor: schedule.nameDoctor.lastName,
+                    firstNameDoctor: schedule.nameDoctor.firstName,
                     token: token
                 })
             }
-
             resolve({
                 errCode: 0,
                 message: "post data success"
@@ -74,6 +74,7 @@ let postBookingFromPatient = (data) => {
         }
     })
 }
+
 let postAcceptBookingFromPatient = (token) => {
     return new Promise(async (resolve, reject) => {
         try {

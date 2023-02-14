@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Schedule.belongsTo(models.Allcode, { foreignKey: 'keyMap', targetKey: 'keyMap' })
-      //Schedule.hasMany(models.User, { foreignKey: 'doctorId', targetKey: 'id', as: 'scheduleDoctor' })
+      Schedule.belongsTo(models.User, { foreignKey: 'doctorId', targetKey: 'id', as: 'nameDoctor' })
+      Schedule.hasOne(models.Booking, { foreignKey: 'id', targetKey: 'scheduleId', as: 'scheduleData' })
       Schedule.hasMany(models.Doctor_infor, { foreignKey: 'doctorId', targetKey: 'doctorId', as: 'scheduleDoctor' })
     }
   }

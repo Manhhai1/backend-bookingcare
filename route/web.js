@@ -38,6 +38,11 @@ let initWebRouter = (app) => {
     router.get('/api/doctor-infor', doctorController.getDoctorInfor)
     router.post('/api/booking-from-patient', patientController.postBookingFromPatient)
     router.post(`/api/accept-booking-from-patient`, patientController.postAcceptBookingFromPatient)
+    router.get(`/api/schedule-doctor-booking`, doctorController.getScheduleDoctorJoinPatient)
+    router.delete('/api/delete-booking', doctorController.deleteBooking)
+    router.put('/api/update-infor-doctor', doctorController.updateDoctorInfor)
+    router.post('/api/post-history', doctorController.postHistory)
+    router.get('/api/all-histories', doctorController.getAllHistories)
 
 
 
