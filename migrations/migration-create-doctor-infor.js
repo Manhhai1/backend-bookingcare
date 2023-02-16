@@ -33,6 +33,12 @@ module.exports = {
       count: {
         type: Sequelize.STRING
       },
+      specialtyId: {
+        type: Sequelize.STRING
+      },
+      telemedicineId: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
