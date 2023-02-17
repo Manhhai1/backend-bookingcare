@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 /node_modules
 /vendor
 /.idea
 .idea/
 .env
+=======
+node_modules
+>>>>>>> b95ac6a (update code)
