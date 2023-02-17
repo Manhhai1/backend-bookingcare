@@ -13,12 +13,6 @@ let initWebRouter = (app) => {
     router.get('/', homeController.getHomePage)
     app.use(bp.json())
     app.use(bp.urlencoded({ extended: true }))
-    router.get('/crud', homeController.getCRUD)
-    router.post('/post-crud', homeController.postCRUD)
-    router.get('/getCrud', homeController.displayGetCRUD);
-    router.get('/edit-crud', homeController.getEditCRUD);
-    router.post('/putUser', homeController.putUser);
-    router.get('/delete-crud', homeController.deleteUser);
     router.post('/api/login', userController.handleLogin)
     router.get('/api/get-all-users', userController.getAllUsers)
     router.post('/api/create-new-user', userController.createNewUserFromController)
