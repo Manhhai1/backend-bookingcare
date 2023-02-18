@@ -3,6 +3,10 @@ const sequelize = new Sequelize('railway', 'root', '8AZLB5719xc8o59523kw', {
     host: 'containers-us-west-42.railway.app',
     port: '6635',
     dialect: 'mysql',
+    ssl: {
+        require: true,
+        rejectUnauthorized: false
+    }
 
 });
 let connectDB = async () => {
