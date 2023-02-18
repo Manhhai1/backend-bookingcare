@@ -1,12 +1,8 @@
 const { Sequelize } = require('sequelize');
-const sequelize = new Sequelize('railway', 'root', '8AZLB5719xc8o59523kw', {
-    host: 'containers-us-west-42.railway.app',
-    port: '6635',
+const sequelize = new Sequelize(process.env.MYSQLDATABASE, process.env.MYSQLUSER, process.env.MYSQLPASSWORD, {
+    host: process.env.MYSQLHOST,
+    port: process.env.MYSQLPORT,
     dialect: 'mysql',
-    ssl: {
-        require: true,
-        rejectUnauthorized: false
-    }
 
 });
 let connectDB = async () => {

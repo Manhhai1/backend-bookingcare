@@ -1,3 +1,4 @@
+
 {
   "development": {
     "username": "root",
@@ -5,11 +6,7 @@
     "database": "railway",
     "host": "containers-us-west-42.railway.app",
     "dialect": "mysql",
-    "port": "6635",
-    "ssl": {
-      "require": true,
-      "rejectUnauthorized": false
-    }
+    "port": "6635"
 },
 "test": {
   "username": "root",
