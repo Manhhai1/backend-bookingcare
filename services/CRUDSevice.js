@@ -56,7 +56,6 @@ let getAllUsersfromSevice = (id) => {
             let allUsers = {}
             if (id === 'all') {
                 allUsers = await db.User.findAll()
-                resolve(allUsers)
             }
             if (id !== 'all' && id) {
                 allUsers = await db.User.findOne({
